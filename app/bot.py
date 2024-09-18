@@ -1,6 +1,5 @@
 import os
 from dotenv import load_dotenv
-from telebot import TeleBot
 import telebot
 from dateutil import parser
 from telebot import types
@@ -22,13 +21,17 @@ user_conversations = {}  # Определяем переменную user_conver
 
 # Переменные для хранения состояния пагинации по пользователям
 pagination_state = {}
-client = TrackerClient(token=YANDEX_TOKEN, org_id=PROJECT_ID)
 
 # Импортируем и подключаем обработчики
-from app.handlers.star_handler import StartHandler
-from app.handlers.task_handler import TaskHandler
-from app.handlers.project_handler import ProjectHandler
+from handlers.star_handler import StartHandler
+from handlers.task_handler import TaskHandler
+from handlers.project_handler import ProjectHandler
+from handlers.text_handler import TextHandler
+from func.callback import PaginationProject, PagintationTask
 
+paginationTask = PagintationTask()
+paginationProj = PaginationProject()
+text_handler = TextHandler()
 start_handler = StartHandler()
 task_handler = TaskHandler()
 project_handler = ProjectHandler()

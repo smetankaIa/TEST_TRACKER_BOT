@@ -1,4 +1,4 @@
-from app.bot import bot, user_state, types
+from bot import bot, user_state, types
 
 class StartHandler:
     @bot.message_handler(commands=['start'])
@@ -16,6 +16,5 @@ class StartHandler:
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             btn_tasks = types.KeyboardButton("Задачи")
             btn_projects = types.KeyboardButton("Проекты")
-            btn_gpt = types.KeyboardButton("ChatGPT")
-            markup.add(btn_tasks, btn_projects, btn_gpt)
+            markup.add(btn_tasks, btn_projects)
             bot.send_message(chat_id, text="Главное меню", reply_markup=markup)

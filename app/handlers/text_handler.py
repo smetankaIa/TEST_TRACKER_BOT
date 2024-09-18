@@ -1,10 +1,10 @@
-from app.handlers.project_handler import ProjectHandler
-from app.bot import bot, user_state, types, pagination_state
-from app.handlers.star_handler import StartHandler
-from app.func.fetch import fetch_tasks
-from app.func.inline_func import get_tasks_message
-from app.services.project_action import HandlerProjectActions
-from app.services.task_action import HandlerTaskActions
+from handlers.project_handler import ProjectHandler
+from bot import bot, user_state, types, pagination_state
+from handlers.star_handler import StartHandler
+from func.fetch import fetch_tasks
+from func.get_message import get_tasks_message
+from services.project_action import HandlerProjectActions
+from services.task_action import HandlerTaskActions
 
 
 class TextHandler:        

@@ -1,4 +1,6 @@
-from app.__main__ import PROJECT_ID, YANDEX_TOKEN, requests, get_user_role, UserRole
+from bot import PROJECT_ID, YANDEX_TOKEN
+import requests 
+from roles import get_user_role, UserRole
 
 # Получение всех задач из Yandex Tracker
 def fetch_tasks():

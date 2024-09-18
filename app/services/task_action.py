@@ -1,11 +1,8 @@
-from app.bot import pagination_state, types, bot
-from app.func.inline_func import get_tasks_message
-from app.func.fetch import fetch_tasks, fetch_user_tasks
-from app.handlers.star_handler import StartHandler
-from app.handlers.task_handler import TaskHandler
-
-
-
+from bot import pagination_state, types, bot, user_state
+from func.get_message import get_tasks_message
+from func.fetch import fetch_tasks, fetch_user_tasks
+from handlers.star_handler import StartHandler
+from handlers.task_handler import TaskHandler
 
 class HandlerTaskActions:            
     def handle_task_actions(message):
@@ -28,10 +25,24 @@ class HandlerTaskActions:
                 bot.send_message(message.chat.id, text="Нет доступных задач.", reply_markup=markup)
 
         elif message.text == "📄 Мои задачи (поиск по исполнителю)":
-            markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+            user_state_entry = user_state.get(message.chat.id, {})
+            saved_name = user_state_entry.get('name', None)
+            markup = types.ReplyKeyboardMarkup(resize_keyboard=True, one_time_keyboard=True)
             back = types.KeyboardButton("↪️ Вернуться в меню задач")
+            if saved_name:
+                btn_saved_name = types.KeyboardButton(saved_name)
+                btn_other = types.KeyboardButton("Другое")
+                markup.add(btn_saved_name, btn_other)
+            else:
+                markup.add(back)
+                bot.send_message(message.chat.id, text="Напишите имя исполнителя для поиска задач", reply_markup=markup)
+                user_state_entry['state'] = 'waiting_for_executor_name'
+                user_state[message.chat.id] = user_state_entry
+                return
             markup.add(back)
-            bot.send_message(message.chat.id, text="Напишите имя исполнителя для поиска задач", reply_markup=markup)
+            bot.send_message(message.chat.id, text="Выберите имя исполнителя или нажмите 'Другое':", reply_markup=markup)
+            user_state_entry['state'] = 'selecting_executor_name'
+            user_state[message.chat.id] = user_state_entry
 
         elif message.text == "↪️ Вернуться в главное меню":
             StartHandler.start(message)
@@ -40,20 +51,4 @@ class HandlerTaskActions:
             TaskHandler.task_menu(message)
 
         else:
-            user_full_name = message.text.strip().lower()
-            tasks = fetch_tasks()
-            user_tasks = [task for task in tasks if task.get('assignee', {}).get('display', '').lower() == user_full_name]
-            if user_tasks:
-                # Сохраняем задачи и текущую страницу для пользователя
-                pagination_state[message.chat.id] = {
-                    'tasks': user_tasks,
-                    'page': 0
-                }
-                page = 0
-                mes, keyboard = get_tasks_message(user_tasks, page)
-                bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
-            else:
-                markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
-                back = types.KeyboardButton("↪️ Вернуться в меню задач")
-                markup.add(back)
-                bot.send_message(message.chat.id, text="Задачи не найдены.", reply_markup=markup)
+            bot.send_message(message.chat.id, text="Команда не распознана. Пожалуйста, выберите действие из меню.")

@@ -1,4 +1,4 @@
-from app.bot import bot, user_state, types
+from bot import bot, user_state, types
 from roles import access_control, UserRole
 
 

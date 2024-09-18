@@ -35,7 +35,7 @@ def get_user_role(user_id):
 def access_control(allowed_roles):
     def decorator(func):
         def wrapper(message, *args, **kwargs):
-            from mainK import bot  # Импортируем экземпляр бота
+            from bot import bot  # Импортируем экземпляр бота
             user_id = message.from_user.id
             user_role = get_user_role(user_id)
             if user_role in allowed_roles:

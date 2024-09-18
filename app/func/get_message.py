@@ -1,31 +1,4 @@
-from app.bot import types, parser
-
-
-# Функция для формирования сообщения с проектами и Inline клавиатурой (если потребуется)
-def get_projects_message(projects, page, projects_per_page=5):
-    total_pages = (len(projects) - 1) // projects_per_page + 1
-    start = page * projects_per_page
-    end = start + projects_per_page
-    current_projects = projects[start:end]
-
-    mes = "\n".join([f"Проект: {project['name']}" for project in current_projects])
-
-    # Формируем Inline клавиатуру
-    keyboard = types.InlineKeyboardMarkup()
-    buttons = []
-    if page > 0:
-        buttons.append(types.InlineKeyboardButton(
-            text="⬅️ Предыдущая",
-            callback_data=f"projects_prev_{page - 1}"
-        ))
-    if end < len(projects):
-        buttons.append(types.InlineKeyboardButton(
-            text="Следующая ➡️",
-            callback_data=f"projects_next_{page + 1}"
-        ))
-    if buttons:
-        keyboard.add(*buttons)
-    return mes, keyboard
+from bot import types, parser
 
 def get_tasks_message(tasks, page, tasks_per_page=3):
     # Фильтруем задачи, исключая задачи со статусом "Закрыта"
@@ -64,3 +37,29 @@ def get_tasks_message(tasks, page, tasks_per_page=3):
     if buttons:
         keyboard.add(*buttons)
     return mes, keyboard
+# Функция для формирования сообщения с проектами и Inline клавиатурой (если потребуется)
+def get_projects_message(projects, page, projects_per_page=5):
+    total_pages = (len(projects) - 1) // projects_per_page + 1
+    start = page * projects_per_page
+    end = start + projects_per_page
+    current_projects = projects[start:end]
+
+    mes = "\n".join([f"Проект: {project['name']}" for project in current_projects])
+
+    # Формируем Inline клавиатуру
+    keyboard = types.InlineKeyboardMarkup()
+    buttons = []
+    if page > 0:
+        buttons.append(types.InlineKeyboardButton(
+            text="⬅️ Предыдущая",
+            callback_data=f"projects_prev_{page - 1}"
+        ))
+    if end < len(projects):
+        buttons.append(types.InlineKeyboardButton(
+            text="Следующая ➡️",
+            callback_data=f"projects_next_{page + 1}"
+        ))
+    if buttons:
+        keyboard.add(*buttons)
+    return mes, keyboard
+
