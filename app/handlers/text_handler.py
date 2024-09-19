@@ -30,8 +30,7 @@ class TextHandler:
             markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
             btn_tasks = types.KeyboardButton("Задачи")
             btn_projects = types.KeyboardButton("Проекты")
-            btn_gpt = types.KeyboardButton("ChatGPT")
-            markup.add(btn_tasks, btn_projects, btn_gpt)
+            markup.add(btn_tasks, btn_projects)
             bot.send_message(message.chat.id, text="Спасибо! Ваше имя сохранено.\nГлавное меню", reply_markup=markup)
             return
 
