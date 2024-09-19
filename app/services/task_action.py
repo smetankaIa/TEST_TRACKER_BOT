@@ -16,7 +16,7 @@ class HandlerTaskActions:
                     'page': 0
                 }
                 page = 0
-                mes, keyboard = get_tasks_message(tasks, page)
+                mes, keyboard = get_task_NOT_clossed_message(tasks, page)
                 bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
             else:
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -41,6 +41,23 @@ class HandlerTaskActions:
                     markup.add(back)
                     bot.send_message(message.chat.id, text=f"Закрытых задач нет", reply_markup=markup)
                 return
+        # elif message.text == "📄 Мои задачи (поиск по исполнителю)":
+        #     tasks = fetch_user_tasks(user_id)  # Получаем личные задачи пользователя
+        #     if tasks:
+        #         # Сохраняем личные задачи и текущую страницу для пользователя
+        #         pagination_state[message.chat.id] = {
+        #             'personal_tasks': tasks,  # Отдельно сохраняем личные задачи
+        #             'page': 0
+        #         }
+        #         page = 0
+        #         mes, keyboard = get_personal_tasks_message(tasks, page)
+        #         bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
+        #     else:
+        #         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
+        #         back = types.KeyboardButton("↪️ Вернуться в меню задач")
+        #         markup.add(back)
+        #         bot.send_message(message.chat.id, text="Нет личных задач.", reply_markup=markup)
+
         elif message.text == "📄 Мои задачи (поиск по исполнителю)":
             user_state_entry = user_state.get(message.chat.id, {})
             saved_name = user_state_entry.get('name', None)

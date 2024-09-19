@@ -3,7 +3,7 @@ from roles import access_control, UserRole
 
 class TaskHandler:        
     @bot.message_handler(func=lambda message: message.text == "Задачи")
-    @access_control([UserRole.DEVELOPER, UserRole.MANAGER, UserRole.ADMIN])
+    # @access_control([UserRole.DEVELOPER, UserRole.MANAGER, UserRole.ADMIN])
     def task_menu(message):
         user_state[message.chat.id]['state'] = 'tasks'
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)

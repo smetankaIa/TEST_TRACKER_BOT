@@ -27,9 +27,9 @@ from handlers.star_handler import StartHandler
 from handlers.task_handler import TaskHandler
 from handlers.project_handler import ProjectHandler
 from handlers.text_handler import TextHandler
-from func.callback import PaginationProject, PagintationTask, PaginationClosedTask
+from func.callback import PaginationProject, PagintationTask, PaginationClosedTask, PersonalPagination
 
-
+paginationMainTask = PersonalPagination()
 paginationClosedTask = PaginationClosedTask()
 paginationTask = PagintationTask()
 paginationProj = PaginationProject()

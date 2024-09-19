@@ -4,7 +4,7 @@ from roles import access_control, UserRole
 
 class ProjectHandler:        
     @bot.message_handler(func=lambda message: message.text == "Проекты")
-    @access_control([UserRole.DEVELOPER, UserRole.MANAGER, UserRole.ADMIN])
+    # @access_control([UserRole.DEVELOPER, UserRole.MANAGER, UserRole.ADMIN])
     def project_menu(message):
         user_state[message.chat.id]['state'] = 'projects'
         markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
