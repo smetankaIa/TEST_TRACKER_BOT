@@ -49,7 +49,7 @@ class TextHandler:
                         'page': 0
                     }
                     page = 0
-                    mes, keyboard = get_personal_tasks_message(user_tasks, page)
+                    mes, keyboard = get_tasks_message(user_tasks, page)
                     bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
                 else:
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -70,7 +70,7 @@ class TextHandler:
                     'page': 0
                 }
                 page = 0
-                mes, keyboard = get_personal_tasks_message(user_tasks, page)
+                mes, keyboard = get_tasks_message(user_tasks, page)
                 bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
             else:
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)

@@ -1,5 +1,5 @@
 from bot import pagination_state, types, bot, user_state
-from func.get_message import get_tasks_message, get_closed_tasks_message, get_task_NOT_clossed_message
+from func.get_message import get_personal_tasks_message, get_closed_tasks_message, get_task_NOT_clossed_message
 from func.fetch import fetch_tasks, fetch_user_tasks
 from handlers.star_handler import StartHandler
 from handlers.task_handler import TaskHandler

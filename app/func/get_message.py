@@ -146,14 +146,21 @@ def get_projects_message(projects, page, projects_per_page=5):
         keyboard.add(*buttons)
     return mes, keyboard
 
-def get_personal_tasks_message(tasks, page, tasks_per_page=5):
+def get_personal_tasks_message(tasks, page, tasks_per_page=3):
     total_pages = (len(tasks) - 1) // tasks_per_page + 1
     start = page * tasks_per_page
     end = start + tasks_per_page
     current_tasks = tasks[start:end]
 
     mes = "\n".join([
-        f"ID: {task['id']},\nНазвание:{task['summary']},\nПроект:{task['project']['display']}"
+        f"ID: {task['id']}, \nНазвание: {task['summary']}, \n"
+        f"Автор задачи: {task.get('createdBy', {}).get('display')}, \n"
+        f"Проект: {task.get('project', {}).get('display')}, \n"
+        f"Исполнитель: {task.get('assignee', {}).get('display', 'Не назначен')}, \n"
+        f"Приоритет: {task.get('priority', {}).get('display', 'Не назначен')}, \n"
+        f"Дата создания: {parser.parse(task.get('createdAt')).date()}, \n"
+        f"Дата дедлайна: {task.get('deadline', 'Не установлен')}, \n"
+        f"Статус задачи: {task.get('status', {}).get('display')}\n\n"
         for task in current_tasks
     ])
 

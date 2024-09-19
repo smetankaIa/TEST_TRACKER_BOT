@@ -1,5 +1,5 @@
 from bot import bot, pagination_state, telebot
-from func.get_message import get_projects_message, get_personal_tasks_message, get_closed_tasks_message, get_task_NOT_clossed_message
+from func.get_message import get_projects_message, get_tasks_message, get_closed_tasks_message, get_task_NOT_clossed_message
 
 # Обработка callback_query для пагинации задач
 class PagintationTask:
@@ -22,7 +22,7 @@ class PagintationTask:
 
         pagination_state[chat_id]['page'] = page
 
-        mes, keyboard = get_task_NOT_clossed_message(tasks, page)
+        mes, keyboard = get_tasks_message(tasks, page)
         try:
             bot.edit_message_text(chat_id=chat_id, message_id=call.message.message_id, text=mes, reply_markup=keyboard)
         except telebot.apihelper.ApiTelegramException:
@@ -36,6 +36,7 @@ class PersonalPagination:
         chat_id = call.message.chat.id
         data = call.data
 
+        # Проверяем, есть ли задачи в состоянии пагинации
         if chat_id not in pagination_state:
             bot.answer_callback_query(call.id, "Срок действия сессии истек. Пожалуйста, запросите задачи снова.")
             return
@@ -43,14 +44,30 @@ class PersonalPagination:
         tasks = pagination_state[chat_id]['tasks']
         page = pagination_state[chat_id]['page']
 
+        # Обновляем страницу на следующую или предыдущую
         if 'next' in data and (page + 1) * 5 < len(tasks):
             page += 1
         elif 'prev' in data and page > 0:
             page -= 1
 
         pagination_state[chat_id]['page'] = page
-        mes, keyboard = get_personal_tasks_message(tasks, page)
-        bot.edit_message_text(chat_id=chat_id, message_id=call.message.message_id, text=mes, reply_markup=keyboard)
+
+        # Получаем текст для сообщений и клавиатуру
+        mes, keyboard = get_tasks_message(tasks, page)
+
+        # Проверяем, что сообщение не пустое
+        if not mes:
+            bot.answer_callback_query(call.id, "Нет задач для отображения.")
+            return
+
+        try:
+            # Отправляем отредактированное сообщение с задачами и клавиатурой
+            bot.edit_message_text(chat_id=chat_id, message_id=call.message.message_id, text=mes, reply_markup=keyboard)
+        except telebot.apihelper.ApiTelegramException as e:
+            # Если не удается отредактировать сообщение (например, слишком старое), отправляем новое сообщение
+            bot.send_message(chat_id=chat_id, text=mes, reply_markup=keyboard)
+        
+        # Подтверждаем callback
         bot.answer_callback_query(call.id)
 class PaginationProject:
 # Обработка callback_query для пагинации проектов (если потребуется)
