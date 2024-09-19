@@ -1,5 +1,5 @@
 from bot import pagination_state, types, bot, user_state
-from func.get_message import get_tasks_message, get_closed_tasks_message
+from func.get_message import get_tasks_message, get_closed_tasks_message, get_task_NOT_clossed_message
 from func.fetch import fetch_tasks, fetch_user_tasks
 from handlers.star_handler import StartHandler
 from handlers.task_handler import TaskHandler
@@ -16,7 +16,7 @@ class HandlerTaskActions:
                     'page': 0
                 }
                 page = 0
-                mes, keyboard = get_tasks_message(tasks, page)
+                mes, keyboard = get_task_NOT_clossed_message(tasks, page)
                 bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
             else:
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -25,7 +25,7 @@ class HandlerTaskActions:
                 bot.send_message(message.chat.id, text="Нет доступных задач.", reply_markup=markup)
 
         elif message.text == "Закрытые задачи":
-                tasks = fetch_tasks()
+                tasks = fetch_user_tasks(user_id)
                 
                 if tasks: 
                     pagination_state[message.chat.id] = {

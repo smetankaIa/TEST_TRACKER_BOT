@@ -39,15 +39,14 @@ def fetch_user_tasks(user_id):
 
     if user_role == UserRole.USER:
         # Возвращаем только задачи, назначенные на пользователя
-        # tasks = [task for task in tasks if task.get('assignee', {}).get('id') == user_id]
-        tasks = [task for task in tasks if task.get('status', {}).get('display', '').lower() != 'закрыта']
+        tasks = []
     elif user_role == UserRole.DEVELOPER:
         # Возвращаем задачи, связанные с разработчиком (можно уточнить критерии)
         # Здесь просто возвращаем все задачи
-        tasks = [task for task in tasks if task.get('status', {}).get('display', '').lower() != 'закрыта']
+        tasks = tasks
     elif user_role in [UserRole.MANAGER, UserRole.ADMIN]:
         # Возвращаем все задачи
-        tasks = [task for task in tasks if task.get('status', {}).get('display', '').lower() != 'закрыта']
+        tasks = tasks
     else:
-        tasks = [task for task in tasks if task.get('status', {}).get('display', '').lower() != 'закрыта']
+        tasks = []
     return tasks    
