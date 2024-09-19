@@ -2,7 +2,7 @@ from handlers.project_handler import ProjectHandler
 from bot import bot, user_state, types, pagination_state
 from handlers.star_handler import StartHandler
 from func.fetch import fetch_tasks
-from func.get_message import get_tasks_message
+from func.get_message import get_tasks_message, get_task_NOT_clossed_message
 from services.project_action import HandlerProjectActions
 from services.task_action import HandlerTaskActions
 

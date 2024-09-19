@@ -16,7 +16,7 @@ class HandlerTaskActions:
                     'page': 0
                 }
                 page = 0
-                mes, keyboard = get_task_NOT_clossed_message(tasks, page)
+                mes, keyboard = get_tasks_message(tasks, page)
                 bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
             else:
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
