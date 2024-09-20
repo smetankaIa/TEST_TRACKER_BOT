@@ -29,7 +29,7 @@ from handlers.project_handler import ProjectHandler
 from handlers.text_handler import TextHandler
 from func.callback import PaginationProject, PagintationTask, PaginationClosedTask, PersonalPagination
 
-paginationMainTask = PersonalPagination()
+# paginationMainTask = PersonalPagination()
 paginationClosedTask = PaginationClosedTask()
 paginationTask = PagintationTask()
 paginationProj = PaginationProject()

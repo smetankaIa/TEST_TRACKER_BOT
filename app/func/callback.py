@@ -1,5 +1,5 @@
 from bot import bot, pagination_state, telebot
-from func.get_message import get_projects_message, get_tasks_message, get_closed_tasks_message, get_task_NOT_clossed_message
+from func.get_message import get_projects_message, get_task_NOT_clossed_message, get_closed_tasks_message
 
 # Обработка callback_query для пагинации задач
 class PagintationTask:
@@ -22,7 +22,7 @@ class PagintationTask:
 
         pagination_state[chat_id]['page'] = page
 
-        mes, keyboard = get_tasks_message(tasks, page)
+        mes, keyboard = get_task_NOT_clossed_message(tasks, page)
         try:
             bot.edit_message_text(chat_id=chat_id, message_id=call.message.message_id, text=mes, reply_markup=keyboard)
         except telebot.apihelper.ApiTelegramException:
@@ -53,7 +53,7 @@ class PersonalPagination:
         pagination_state[chat_id]['page'] = page
 
         # Получаем текст для сообщений и клавиатуру
-        mes, keyboard = get_tasks_message(tasks, page)
+        mes, keyboard = get_task_NOT_clossed_message(tasks, page)
 
         # Проверяем, что сообщение не пустое
         if not mes:

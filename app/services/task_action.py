@@ -1,5 +1,5 @@
 from bot import pagination_state, types, bot, user_state
-from func.get_message import get_personal_tasks_message, get_closed_tasks_message, get_task_NOT_clossed_message
+from func.get_message import get_closed_tasks_message, get_task_NOT_clossed_message
 from func.fetch import fetch_tasks, fetch_user_tasks
 from handlers.star_handler import StartHandler
 from handlers.task_handler import TaskHandler
@@ -8,7 +8,7 @@ class HandlerTaskActions:
     def handle_task_actions(message):
         user_id = message.from_user.id
         if message.text == "📑 Все задачи":
-            tasks = fetch_user_tasks(user_id)
+            tasks = fetch_tasks()
             if tasks:
                 # Сохраняем задачи и текущую страницу для пользователя
                 pagination_state[message.chat.id] = {
@@ -25,7 +25,7 @@ class HandlerTaskActions:
                 bot.send_message(message.chat.id, text="Нет доступных задач.", reply_markup=markup)
 
         elif message.text == "Закрытые задачи":
-                tasks = fetch_user_tasks(user_id)
+                tasks = fetch_tasks()
                 
                 if tasks: 
                     pagination_state[message.chat.id] = {
