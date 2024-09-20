@@ -43,19 +43,24 @@ class TextHandler:
                 executor_name = message.text.strip().lower()
                 tasks = fetch_tasks()
                 user_tasks = [task for task in tasks if task.get('assignee', {}).get('display', '').lower() == executor_name]
-                if user_tasks:
+
+                # Фильтруем задачи, которые не закрыты
+                tasks_in_work = [task for task in user_tasks if task.get('status', {}).get('display', '').lower() != 'закрыт']
+
+                if tasks_in_work:
                     pagination_state[message.chat.id] = {
-                        'tasks': user_tasks,
+                        'tasks': tasks_in_work,
                         'page': 0
                     }
                     page = 0
-                    mes, keyboard = get_task_NOT_clossed_message(user_tasks, page)
+                    mes, keyboard = get_tasks_message(tasks_in_work, page)
                     bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
                 else:
+                    # Если все задачи закрыты, выводим сообщение
                     markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
                     back = types.KeyboardButton("↪️ Вернуться в меню задач")
                     markup.add(back)
-                    bot.send_message(message.chat.id, text="Задачи не найдены.", reply_markup=markup)
+                    bot.send_message(message.chat.id, text="Нет задач в работе.", reply_markup=markup)
                 user_state_entry['state'] = 'tasks'
                 user_state[message.chat.id] = user_state_entry
                 return
@@ -64,19 +69,23 @@ class TextHandler:
             executor_name = message.text.strip().lower()
             tasks = fetch_tasks()
             user_tasks = [task for task in tasks if task.get('assignee', {}).get('display', '').lower() == executor_name]
-            if user_tasks:
+
+            # Фильтруем задачи, которые не закрыты
+            tasks_in_work = [task for task in user_tasks if task.get('status', {}).get('display', '').lower() != 'закрыт']
+
+            if tasks_in_work:
                 pagination_state[message.chat.id] = {
-                    'tasks': user_tasks,
+                    'tasks': tasks_in_work,
                     'page': 0
                 }
                 page = 0
-                mes, keyboard = get_task_NOT_clossed_message(user_tasks, page)
+                mes, keyboard = get_tasks_message(tasks_in_work, page)
                 bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
             else:
                 markup = types.ReplyKeyboardMarkup(resize_keyboard=True)
                 back = types.KeyboardButton("↪️ Вернуться в меню задач")
                 markup.add(back)
-                bot.send_message(message.chat.id, text="Задачи не найдены.", reply_markup=markup)
+                bot.send_message(message.chat.id, text="Нет задач в работе.", reply_markup=markup)
             user_state_entry['state'] = 'tasks'
             user_state[message.chat.id] = user_state_entry
             return
@@ -93,16 +102,19 @@ class TextHandler:
                     task for task in tasks
                     if task.get('project', {}).get('display', '').lower() == project_name
                 ]
-                if project_tasks:
+
+                tasks_in_work = [task for task in project_tasks if task.get('status', {}).get('display', '').lower() != 'закрыт']
+
+                if tasks_in_work:
                     pagination_state[message.chat.id] = {
-                        'tasks': project_tasks,
+                        'tasks': tasks_in_work,
                         'page': 0
                     }
                     page = 0
-                    mes, keyboard = get_tasks_message(project_tasks, page)
+                    mes, keyboard = get_tasks_message(tasks_in_work, page)
                     bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
                 else:
-                    bot.send_message(message.chat.id, text=f"Задачи проекта '{project_name}' не найдены")
+                    bot.send_message(message.chat.id, text=f"Задачи проекта '{project_name}' не найдены или все задачи закрыты.")
                 user_state_entry['state'] = 'projects'
                 return
 
@@ -150,16 +162,19 @@ class TextHandler:
                     if task.get('project', {}).get('display', '').lower() == project_name and
                     task.get('assignee', {}).get('display', '').lower() == executor_name
                 ]
-                if matching_tasks:
+
+                tasks_in_work = [task for task in matching_tasks if task.get('status', {}).get('display', '').lower() != 'закрыт']
+
+                if tasks_in_work:
                     pagination_state[message.chat.id] = {
-                        'tasks': matching_tasks,
+                        'tasks': tasks_in_work,
                         'page': 0
                     }
                     page = 0
-                    mes, keyboard = get_tasks_message(matching_tasks, page)
+                    mes, keyboard = get_tasks_message(tasks_in_work, page)
                     bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
                 else:
-                    bot.send_message(message.chat.id, text=f"Задачи для исполнителя '{executor_name}' в проекте '{project_name}' не найдены.")
+                    bot.send_message(message.chat.id, text=f"Задачи для исполнителя '{executor_name}' в проекте '{project_name}' не найдены или все задачи закрыты.")
                 user_state_entry['state'] = 'projects'
                 user_state[message.chat.id] = user_state_entry
                 return
@@ -173,16 +188,19 @@ class TextHandler:
                 if task.get('project', {}).get('display', '').lower() == project_name and
                 task.get('assignee', {}).get('display', '').lower() == executor_name
             ]
-            if matching_tasks:
+
+            tasks_in_work = [task for task in matching_tasks if task.get('status', {}).get('display', '').lower() != 'закрыт']
+
+            if tasks_in_work:
                 pagination_state[message.chat.id] = {
-                    'tasks': matching_tasks,
+                    'tasks': tasks_in_work,
                     'page': 0
                 }
                 page = 0
-                mes, keyboard = get_tasks_message(matching_tasks, page)
+                mes, keyboard = get_tasks_message(tasks_in_work, page)
                 bot.send_message(message.chat.id, text=mes, reply_markup=keyboard)
             else:
-                bot.send_message(message.chat.id, text=f"Задачи для исполнителя '{executor_name}' в проекте '{project_name}' не найдены.")
+                bot.send_message(message.chat.id, text=f"Задачи для исполнителя '{executor_name}' в проекте '{project_name}' не найдены или все задачи закрыты.")
             user_state_entry['state'] = 'projects'
             user_state[message.chat.id] = user_state_entry
             return

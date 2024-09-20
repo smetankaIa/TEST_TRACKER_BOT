@@ -1,8 +1,8 @@
 from bot import types, parser
 
-def get_tasks_message(task, page, tasks_per_page=3):
+def get_tasks_message(tasks, page, tasks_per_page=3):
    # Фильтруем задачи, исключая задачи со статусом "Закрыта"
-    tasks = task
+    tasks = [task for task in tasks if task.get('status', {}).get('display', '').lower() != 'закрыт']
 
     total_pages = (len(tasks) - 1) // tasks_per_page + 1
     start = page * tasks_per_page
